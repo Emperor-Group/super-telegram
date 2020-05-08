@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/orders.dart';
 import 'package:shop_app/providers/products_provider.dart';
+import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/edit_product_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
@@ -28,7 +30,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: Orders(),
-        )
+        ),
+        ChangeNotifierProvider.value(
+          value: Auth(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -95,17 +100,15 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        initialRoute: '/',
+        home: AuthScreen(),
         routes: {
-          '/': (ctx) => ProductsOverviewScreen(),
+          //'/': (ctx) => ProductsOverviewScreen(),
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(),
           UserProductScreen.routeName: (ctx) => UserProductScreen(),
           EditProductScreen.routeName: (ctx) => EditProductScreen(),
-        },
-        onUnknownRoute: (settings) {
-          return MaterialPageRoute(builder: (ctx) => ProductsOverviewScreen());
+          AuthScreen.routeName: (ctx) => AuthScreen(),
         },
       ),
     );
