@@ -98,8 +98,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             )
           : RefreshIndicator(
               child: ProductsGrid(_showOnlyFavourites),
-              onRefresh: () =>
-                  Provider.of<Products>(context, listen: false).fetchAndSetProducts(),
+              onRefresh: () => Provider.of<Products>(context, listen: false)
+                  .fetchAndSetProducts(),
             ),
     );
   }
