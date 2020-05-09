@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Products('', []),
           update: (ctx, auth, previousProducts) => Products(
             auth.token,
-            previousProducts.items == null ? [] : previousProducts.items,
+            previousProducts.items,
           ),
         ),
         ChangeNotifierProvider.value(
