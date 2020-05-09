@@ -48,24 +48,24 @@ class Product with ChangeNotifier {
   ///product.dart
   ///
   ///
-  void toggleFavourtieStatus(String token) async {
+  void toggleFavourtieStatus(String token, String userId) async {
     final url =
-        'https://flutter-shopapp-trial.firebaseio.com/products/$id.json?auth=$token';
+        'https://flutter-shopapp-trial.firebaseio.com/userFavourites/$userId/$id.json?auth=$token';
     try {
-      final response = await http.patch(
+      final response = await http.put(
         url,
         body: json.encode(
-          {'isFavourite': !isFavourite},
+          !isFavourite,
         ),
       );
       isFavourite = !isFavourite;
-      if (response.statusCode >= 400){
+      if (response.statusCode >= 400) {
         isFavourite = !isFavourite;
       }
       notifyListeners();
-    } catch (error){
+    } catch (error) {
       notifyListeners();
       throw error;
-    } 
+    }
   }
 }

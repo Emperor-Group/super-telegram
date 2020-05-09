@@ -11,8 +11,9 @@ class Products with ChangeNotifier {
   List<Product> _items = [];
 
   String authToken;
+  String userID;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userID, this._items);
 
   ///products_provider.dart
   ///
@@ -29,8 +30,10 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
-    final url = 'https://flutter-shopapp-trial.firebaseio.com/products.json?auth=$authToken';
+  Future<void> fetchAndSetProducts([bool manage = false]) async {
+    final url = manage
+        ? 'https://flutter-shopapp-trial.firebaseio.com/products.json?auth=$authToken&orderBy="creatorId"&equalTo="$userID"'
+        : 'https://flutter-shopapp-trial.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(url);
       final Map<String, dynamic> extractedData = json.decode(response.body);
@@ -38,16 +41,27 @@ class Products with ChangeNotifier {
       if (extractedData == null) {
         return;
       }
-      extractedData.forEach((key, value) {
-        loadedProducts.add(Product(
-          id: key,
-          description: value['description'],
-          title: value['title'],
-          imageUrl: value['imageURL'],
-          price: value['price'],
-          isFavourite: value['isFavourite'],
-        ));
-      });
+      final favURL =
+          'https://flutter-shopapp-trial.firebaseio.com/userFavourites/$userID.json?auth=$authToken';
+      final favouriteResponse = await http.get(favURL);
+      final extractedFavourites = json.decode(favouriteResponse.body);
+
+      extractedData.forEach(
+        (key, value) {
+          loadedProducts.add(
+            Product(
+              id: key,
+              description: value['description'],
+              title: value['title'],
+              imageUrl: value['imageURL'],
+              price: value['price'],
+              isFavourite: extractedFavourites == null
+                  ? false
+                  : extractedFavourites[key] ?? false,
+            ),
+          );
+        },
+      );
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
@@ -59,7 +73,8 @@ class Products with ChangeNotifier {
   ///
   ///
   Future<void> addProduct(Product product) async {
-    final url = 'https://flutter-shopapp-trial.firebaseio.com/products.json?auth=$authToken';
+    final url =
+        'https://flutter-shopapp-trial.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         url,
@@ -69,7 +84,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageURL': product.imageUrl,
             'price': product.price,
-            'isFavourite': product.isFavourite,
+            'creatorId': userID,
           },
         ),
       );

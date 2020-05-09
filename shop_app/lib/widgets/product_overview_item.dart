@@ -50,7 +50,7 @@ class ProductOverviewItem extends StatelessWidget {
               size: 30,
             ),
             onPressed: () {
-              item.toggleFavourtieStatus(auth.token);
+              item.toggleFavourtieStatus(auth.token, auth.userId);
             },
           ),
           trailing: Badge(

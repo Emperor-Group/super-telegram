@@ -67,4 +67,9 @@ class Auth with ChangeNotifier {
     }
     return false;
   }
+
+  String get userId{
+    return _userId;
+  }
+
 }
