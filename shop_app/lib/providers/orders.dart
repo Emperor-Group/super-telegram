@@ -32,10 +32,12 @@ class Orders with ChangeNotifier {
 
   String _token;
 
-  Orders(this._token, this._orders);
+  String userId;
+
+  Orders(this._token, this._orders, this.userId);
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    final url = 'https://flutter-shopapp-trial.firebaseio.com/orders.json?auth=${this._token}';
+    final url = 'https://flutter-shopapp-trial.firebaseio.com/orders/$userId.json?auth=${this._token}';
     try {
       final response = await http.post(
         url,
@@ -72,7 +74,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchAndSetOrders() async {
-    final url = 'https://flutter-shopapp-trial.firebaseio.com/orders.json?auth=${this._token}';
+    final url = 'https://flutter-shopapp-trial.firebaseio.com/orders/$userId.json?auth=${this._token}';
     try {
       final response = await http.get(url);
       final Map<String, dynamic> extractedOrders = json.decode(response.body);
@@ -80,7 +82,6 @@ class Orders with ChangeNotifier {
       if (extractedOrders == null) {
         return;
       }
-      
       extractedOrders.forEach(
         (key, value) {
           loadedOrders.add(OrderItem(
@@ -102,6 +103,7 @@ class Orders with ChangeNotifier {
       _orders = loadedOrders;
       notifyListeners();
     } catch (error) {
+      print(error);
       throw error;
     }
   }
