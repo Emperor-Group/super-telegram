@@ -31,7 +31,7 @@ class OrdersScreen extends StatelessWidget {
                           child: Center(
                             child: Text(
                               'No Orders Here Yet!\nStart Placing Some!',
-                              style: Theme.of(context).textTheme.title,
+                              style: Theme.of(context).textTheme.headline6,
                             ),
                           ),
                           onRefresh: () =>

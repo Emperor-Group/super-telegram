@@ -48,9 +48,9 @@ class Product with ChangeNotifier {
   ///product.dart
   ///
   ///
-  void toggleFavourtieStatus() async {
+  void toggleFavourtieStatus(String token) async {
     final url =
-        'https://flutter-shopapp-trial.firebaseio.com/products/$id.json';
+        'https://flutter-shopapp-trial.firebaseio.com/products/$id.json?auth=$token';
     try {
       final response = await http.patch(
         url,
