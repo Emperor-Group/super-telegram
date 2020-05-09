@@ -23,7 +23,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
-          value: Products(),
+          value: Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (ctx) => Products('0', []),
+          update: (ctx, auth, previousProducts) => Products(auth.token,
+              previousProducts.items == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider.value(
           value: Cart(),
@@ -31,85 +36,84 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Orders(),
         ),
-        ChangeNotifierProvider.value(
-          value: Auth(),
-        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          accentColor: Colors.lightGreenAccent,
-          errorColor: Colors.amber,
-          appBarTheme: AppBarTheme(
+      child: Consumer<Auth>(
+        builder: (ctx, auth, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            accentColor: Colors.lightGreenAccent,
+            errorColor: Colors.amber,
+            appBarTheme: AppBarTheme(
+              textTheme: TextTheme(
+                headline6: TextStyle(
+                  fontFamily: 'Lato',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+                bodyText2: TextStyle(
+                  fontFamily: 'Lato',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
             textTheme: TextTheme(
-              title: TextStyle(
-                fontFamily: 'Lato',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-              body1: TextStyle(
-                fontFamily: 'Lato',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          textTheme: TextTheme(
-            body1: TextStyle(
-              color: Colors.black,
-              fontFamily: 'OpenSans',
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-            body2: TextStyle(
-                color: Colors.grey,
-                fontFamily: 'OpenSans',
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
-            display1: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Quicksand',
-                fontSize: 15,
-                fontWeight: FontWeight.bold),
-            display2: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Quicksand',
-                fontSize: 15,
-                fontWeight: FontWeight.bold),
-            display3: TextStyle(
-                color: Colors.green,
-                fontFamily: 'Quicksand',
-                fontSize: 18,
-                fontWeight: FontWeight.w500),
-            display4: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Quicksand',
-                fontSize: 12,
-                fontWeight: FontWeight.w500),
-            subhead: TextStyle(
+              bodyText1: TextStyle(
                 color: Colors.black,
                 fontFamily: 'OpenSans',
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-            caption: TextStyle(
-                color: Colors.grey,
-                fontFamily: 'Quicksand',
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+              bodyText2: TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'OpenSans',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+              headline4: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Quicksand',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+              headline3: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Quicksand',
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+              headline1: TextStyle(
+                  color: Colors.green,
+                  fontFamily: 'Quicksand',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
+              headline2: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Quicksand',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500),
+              headline5: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+              caption: TextStyle(
+                  color: Colors.grey,
+                  fontFamily: 'Quicksand',
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
+          home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+          routes: {
+            //'/': (ctx) => ProductsOverviewScreen(),
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            CartScreen.routeName: (ctx) => CartScreen(),
+            OrdersScreen.routeName: (ctx) => OrdersScreen(),
+            UserProductScreen.routeName: (ctx) => UserProductScreen(),
+            EditProductScreen.routeName: (ctx) => EditProductScreen(),
+            AuthScreen.routeName: (ctx) => AuthScreen(),
+          },
         ),
-        home: AuthScreen(),
-        routes: {
-          //'/': (ctx) => ProductsOverviewScreen(),
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          UserProductScreen.routeName: (ctx) => UserProductScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen(),
-          AuthScreen.routeName: (ctx) => AuthScreen(),
-        },
       ),
     );
   }

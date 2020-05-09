@@ -21,12 +21,21 @@ class Auth with ChangeNotifier {
           },
         ),
       );
-      print(json.decode(response.body));
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {
         HttpException(responseData['error']['message']);
       }
+      _token = responseData['idToken'];
+      _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(responseData['expiresIn']),
+        ),
+      );
+      print('No we got it right');
+      notifyListeners();
     } catch (error) {
+      print(error);
       throw error;
     }
   }
@@ -41,5 +50,21 @@ class Auth with ChangeNotifier {
     const url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCjMG0AuTD-YeBNLEIWPZ8SE84ruUW-qfE';
     return _authSegment(email, password, url);
+  }
+
+  String get token {
+    if (_token != null &&
+        _expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now())) {
+      return _token;
+    }
+    return null;
+  }
+
+  bool get isAuth {
+    if (token != null) {
+      return true;
+    }
+    return false;
   }
 }
