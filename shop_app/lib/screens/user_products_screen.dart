@@ -16,7 +16,6 @@ class UserProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -39,27 +38,29 @@ class UserProductScreen extends StatelessWidget {
                   )
                 : RefreshIndicator(
                     onRefresh: () => _refreshProducts(context),
-                    child: Consumer<Products>( builder: (ctx, productsData, _) => Padding(
-                      padding: EdgeInsets.all(20),
-                      child: ListView.builder(
-                        itemBuilder: (ctx, index) {
-                          return Column(
-                            children: <Widget>[
-                              Card(
-                                elevation: 2,
-                                child: UserProductItem(
-                                  productsData.items[index].id,
-                                  productsData.items[index].title,
-                                  productsData.items[index].imageUrl,
+                    child: Consumer<Products>(
+                      builder: (ctx, productsData, _) => Padding(
+                        padding: EdgeInsets.all(20),
+                        child: ListView.builder(
+                          itemBuilder: (ctx, index) {
+                            return Column(
+                              children: <Widget>[
+                                Card(
+                                  elevation: 2,
+                                  child: UserProductItem(
+                                    productsData.items[index].id,
+                                    productsData.items[index].title,
+                                    productsData.items[index].imageUrl,
+                                  ),
                                 ),
-                              ),
-                              Divider()
-                            ],
-                          );
-                        },
-                        itemCount: productsData.items.length,
+                                Divider()
+                              ],
+                            );
+                          },
+                          itemCount: productsData.items.length,
+                        ),
                       ),
-                    ),),
+                    ),
                   ),
       ),
     );
