@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/custom_route.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/user_products_screen.dart';
@@ -74,8 +75,11 @@ class MainDrawer extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
             () {
-              Navigator.of(context)
-                  .pushReplacementNamed(OrdersScreen.routeName);
+              Navigator.of(context).pushReplacement(
+                CustomPageRoute(
+                  builder: (ctx) => OrdersScreen(),
+                ),
+              );
             },
           ),
           _buildListTile(

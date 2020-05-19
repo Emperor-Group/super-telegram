@@ -14,40 +14,47 @@ class ProductDetailScreen extends StatelessWidget {
     ).getByID(id);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          loadedProduct.title,
-          style: Theme.of(context).appBarTheme.textTheme.title,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                loadedProduct.imageUrl,
-                fit: BoxFit.cover,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(loadedProduct.title),
+              background: Hero(
+                tag: loadedProduct.id,
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            SizedBox(
-              height: 10,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  '${loadedProduct.title} \n\$${loadedProduct.price}',
+                  style: Theme.of(context).textTheme.body1,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  '${loadedProduct.description}',
+                  style: Theme.of(context).textTheme.body2,
+                ),
+                SizedBox(
+                  height: 500,
+                )
+              ],
             ),
-            Text(
-              '${loadedProduct.title} \n\$${loadedProduct.price}',
-              style: Theme.of(context).textTheme.body1,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              '${loadedProduct.description}',
-              style: Theme.of(context).textTheme.body2,
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

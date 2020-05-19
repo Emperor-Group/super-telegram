@@ -38,34 +38,38 @@ class _OrderItemState extends State<OrderItem> {
               },
             ),
           ),
-          if (_expanded)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              height: min(
-                (widget.order.products.length * 20.0 + 10),
-                150,
-              ),
-              child: ListView(
-                padding: EdgeInsets.only(top: 10, bottom: 10),
-                children: widget.order.products
-                    .map(
-                      (prod) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            prod.title,
-                            style: Theme.of(context).textTheme.display1,
-                          ),
-                          Text(
-                            'x${prod.quantity} at \$${prod.pricePerProduct.toStringAsFixed(2)}',
-                            style: Theme.of(context).textTheme.caption,
-                          )
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
-            )
+          AnimatedContainer(
+            duration: Duration(
+              milliseconds: 300,
+            ),
+            curve: Curves.easeInExpo,
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            height: _expanded ? 100 : 0,
+            constraints: BoxConstraints(
+              minHeight: _expanded ? 50 : 0,
+              maxHeight: _expanded ? 100 : 0,
+            ),
+            child: ListView(
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              children: widget.order.products
+                  .map(
+                    (prod) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          prod.title,
+                          style: Theme.of(context).textTheme.display1,
+                        ),
+                        Text(
+                          'x${prod.quantity} at \$${prod.pricePerProduct.toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.caption,
+                        )
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
+          )
         ],
       ),
     );

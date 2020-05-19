@@ -20,9 +20,13 @@ class ProductOverviewItem extends StatelessWidget {
             Navigator.of(context)
                 .pushNamed(ProductDetailScreen.routeName, arguments: item.id);
           },
-          child: Image.network(
-            item.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: item.id,
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product_loader.png'),
+              image: NetworkImage(item.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         footer: GridTileBar(
